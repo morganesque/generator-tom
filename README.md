@@ -1,4 +1,4 @@
-# generator-tom [![Build Status](https://secure.travis-ci.org/morganesque/generator-tom.png?branch=master)](https://travis-ci.org/morganesque/generator-tom)
+# generator-tom
 
 A generator for [Yeoman](http://yeoman.io).
 
