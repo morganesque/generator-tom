@@ -39,7 +39,7 @@ module.exports = function(grunt)
         {
             compass:
             {
-                files: ['<%= yeoman.dev %>/_scss/**/*.{scss,sass}'],
+                files: ['<%= yeoman.dev %>/sass/**/*.{scss,sass}'],
                 tasks: ['compass:server']
             },
             // autoprefixer:
@@ -70,7 +70,7 @@ module.exports = function(grunt)
             },
             allJS:
             {
-                files: ['<%= yeoman.bower %>/allJS.conf'],
+                files: ['<%= yeoman.dev %>/js/allJS.conf'],
                 tasks: ['allJS']
             }
         },
@@ -119,7 +119,7 @@ module.exports = function(grunt)
             options:
             {
                 bundleExec: true,
-                sassDir: '<%= yeoman.dev %>/_scss',
+                sassDir: '<%= yeoman.dev %>/sass',
                 cssDir: '<%= yeoman.build %>/css',
                 imagesDir: '<%= yeoman.build %>/img',
                 javascriptsDir: '<%= yeoman.build %>/js',
@@ -203,7 +203,7 @@ module.exports = function(grunt)
         {
             options:
             {
-                allJSconf: '<%= yeoman.bower %>/allJS.conf'
+                allJSconf: '<%= yeoman.dev %>/js/allJS.conf'
             },
         },
 
@@ -222,7 +222,7 @@ module.exports = function(grunt)
             },
             test:
             {
-                src: '<%= yeoman.bower %>/allJS.conf',
+                src: '<%= yeoman.dev %>/js/allJS.conf',
                 dest: '<%= yeoman.build %>/js/all.min.js',
             }
         }

@@ -31,8 +31,8 @@ TomGenerator.prototype.askFor = function askFor()
     var prompts = [
     {
         // type: 'confirm',
-        name: 'jekyllBool',
-        message: 'Would you like Jekyll?',
+        name: 'siteName',
+        message: 'What is the name of the project yo!?',
         // default: true
     }];
 
@@ -46,16 +46,19 @@ TomGenerator.prototype.askFor = function askFor()
 TomGenerator.prototype.app = function app()
 {
     this.mkdir('dev');
-    this.mkdir('dev/_scss');
-    this.copy('empty', 'dev/_scss/main.scss');
+    this.mkdir('dev/sass');
+    this.copy('empty', 'dev/sass/main.scss');
 
-    this.mkdir('dev/_bower_components');
-    this.copy('empty', 'dev/_bower_components/allJS.conf');
+    this.mkdir('bower_components');
+    this.mkdir('dev/js');
+    this.copy('empty', 'dev/js/allJS.conf');
 
     this.mkdir('build');
     // this.mkdir('build/img');
     // this.mkdir('build/js');
     // this.mkdir('build/css');
+
+    this.copy('project.sublime-project', this.siteName + '.sublime-project');
 
     this.mkdir('tasks');
     this.copy('tasks/grabBower.js', 'tasks/grabBower.js');
