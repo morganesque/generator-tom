@@ -8,14 +8,21 @@
         		".sass-cache", 
         		"bower_components", 
         		"node_modules", 
-        		"tasks"
+        		"tasks",
+        		"test",
         	],
         "file_exclude_patterns": 
 	        [
 	        	".bowerrc", 
 	        	"bower.json", 
 	        	"Gemfile*", 
-	        	"package.json"
+	        	"package.json",
+	        	".gitignore",
+	        	".gitattributes",
+	        	".editorconfig",
+	        	".jshintrc",
+	        	".travis.yml",
+	        	"LICENSE",
 	        ],
         "path": "."
     }]
