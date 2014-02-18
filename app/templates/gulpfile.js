@@ -3,6 +3,7 @@ var gulp 	     = require('gulp'),
     fs 	         = require('fs'),
     compass      = require('gulp-compass'),
     concat       = require('gulp-concat'),
+    header       = require('gulp-header'),
     jekyll 	     = require('gulp-jekyll'),
     uglify 	     = require('gulp-uglify'),
     svgmin       = require('gulp-svgmin'),
@@ -11,8 +12,8 @@ var gulp 	     = require('gulp'),
     serve        = require('gulp-serve'),
     autoprefixer = require('gulp-autoprefixer'),
     livereload   = require('gulp-livereload'),
-    lr           = require('tiny-lr'),
-    server       = lr();
+    tlr          = require('tiny-lr'),  // tiny live reload
+    slr          = tlr();               // server live reload
 
 /*
     ----- COMPASS -----
@@ -38,7 +39,7 @@ gulp.task('styles',function()
     return gulp.src('build/css/*.css')
         .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))        
         .pipe(gulp.dest('build/css'))
-        .pipe(livereload(server));
+        .pipe(livereload(slr));
 });
 
 /*
@@ -61,19 +62,29 @@ gulp.task('jekyll',function()
 */
 gulp.task('libScripts',function()
 {
-    var src = fs.readFileSync('src/js/allJS.conf','utf8').trim().split('\n');
-    gutil.log(src);
-    src.forEach(function(v)
+    var file = fs.readFileSync('src/js/allJS.conf','utf8').trim().split('\n');    
+    var src = file.filter(function(v)
     {
-        // if (!fs.existsSync(v)) gutil.log        
-    });
+        if (!v) return false;
+        if (v.substr(0,1) == '#') return false;   
+
+        if (!fs.existsSync(v)) 
+        {
+            gutil.log(gutil.colors.red(v+' does not exist!'));
+            return false;
+        }
+              
+        return true;
+    })
+    gutil.log(src);
 
     /* javascript minify */    
     return gulp.src(src,{base:'bower_components/'})
         .pipe(uglify())  
+        .pipe(header("/*! bower_components/${file.relative} */\n",{foo:'bar'}))
         .pipe(concat("all.min.js"))
         .pipe(gulp.dest('build/js'))
-        .pipe(livereload(server));
+        .pipe(livereload(slr));
 });
 
 /*
@@ -84,7 +95,7 @@ gulp.task('scripts',function()
     return gulp.src('src/js/**/*.js')
         .pipe(uglify())  
         .pipe(gulp.dest('build/js'))
-        .pipe(livereload(server));
+        .pipe(livereload(slr));
 });
 
 /*
@@ -118,7 +129,7 @@ gulp.task('serve', serve(['.jekyll','build']));
 gulp.task('watch', function() {
  
     // Listen on port 35729
-    server.listen(35729, function (err) 
+    slr.listen(35729, function (err) 
     {
         if (err) { return console.log(err); } 
 
@@ -162,7 +173,7 @@ gulp.task('watch', function() {
         function message(event,name)
         {
             var d = new Date();
-            gutil.log(d.getHours()+':'+d.getMinutes()+' - ' + event.path + ' was ' + event.type + ', running tasks...');
+            gutil.log(d.getHours()+':'+d.getMinutes()+' - ' + gutil.colors.yellow(event.path) + ' was ' + event.type + ', running tasks...');
         }        
 
     });
