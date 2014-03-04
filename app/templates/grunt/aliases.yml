@@ -1,0 +1,12 @@
+allJS:
+    - 'grabBower'
+    - 'uglify:test'
+    - 'concatBower:test'
+    - 'clean:alljs'
+
+default:
+  - 'allJS'
+  - 'clean:server'
+  # - 'concurrent:server'
+  - 'connect:livereload'
+  - 'watch'

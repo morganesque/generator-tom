@@ -77,10 +77,29 @@ TomGenerator.prototype.app = function app()
     if (this.gulpOrGrunt == 'grunt')
     {
         this.copy('Gruntfile.js', 'Gruntfile.js');
+        
         this.mkdir('tasks');
         this.copy('tasks/grabBower.js', 'tasks/grabBower.js');
         this.copy('tasks/concatBower.js', 'tasks/concatBower.js');
+        
         this.copy('grunt-package.json', 'package.json');
+
+        this.mkdir('grunt');
+        this.copy('grunt/aliases.yml','grunt/aliases.yml');
+        this.copy('grunt/autoprefixer.js','grunt/autoprefixer.js');
+        this.copy('grunt/clean.js','grunt/clean.js');
+        this.copy('grunt/compass.js','grunt/compass.js');
+        this.copy('grunt/concatBower.js','grunt/concatBower.js');
+        this.copy('grunt/concurrent.js','grunt/concurrent.js');
+        this.copy('grunt/connect.js','grunt/connect.js');
+        this.copy('grunt/copy.js','grunt/copy.js');
+        this.copy('grunt/grabBower.js','grunt/grabBower.js');
+        this.copy('grunt/imageoptim.js','grunt/imageoptim.js');
+        this.copy('grunt/jekyll.js','grunt/jekyll.js');
+        this.copy('grunt/svg2png.js','grunt/svg2png.js');
+        this.copy('grunt/svgmin.js','grunt/svgmin.js');
+        this.copy('grunt/uglify.js','grunt/uglify.js');
+        this.copy('grunt/watch.js','grunt/watch.js'        );
     }
 
     if (this.gulpOrGrunt == 'gulp')
