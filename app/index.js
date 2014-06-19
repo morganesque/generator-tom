@@ -13,6 +13,7 @@ var TomGenerator = module.exports = function TomGenerator(args, options, config)
         this.installDependencies(
         {
             skipInstall: options['skip-install']
+            // skipInstall: true
         });
     });
 
@@ -53,8 +54,9 @@ TomGenerator.prototype.app = function app()
     this.mkdir('src');
     this.mkdir('src/sass');
     this.copy('sass/styles.scss', 'src/sass/styles.scss');
-    this.copy('sass/ielte8.scss', 'src/sass/ielte8.scss');
+    // this.copy('sass/ielte8.scss', 'src/sass/ielte8.scss');
     this.copy('sass/_mixins.scss', 'src/sass/_mixins.scss');
+    this.copy('sass/_isuck.scss', 'src/sass/_isuck.scss');
     this.copy('sass/config.rb', 'src/sass/config.rb');
 
     this.mkdir('bower_components');
@@ -70,6 +72,8 @@ TomGenerator.prototype.app = function app()
     this.mkdir('build/css');
 
     this.copy('project.sublime-project', this.siteName + '.sublime-project');    
+    this.template('project.sh', 'project.sh'        );    
+
     this.copy('_bower.json', 'bower.json');
     this.copy('gitignore', '.gitignore');
     this.copy('bowerrc', '.bowerrc');
