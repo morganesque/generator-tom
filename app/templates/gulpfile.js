@@ -61,7 +61,7 @@ gulp.task('sass',function()
     */        
     combined.on('error', function(err) 
     {
-        plugins.nodeNotifier.Growl().plugins.notify({
+        plugins.nodeNotifier.Growl().notify({
             name:       "SASS processor",
             title:      "SASS",
             message:    err.message,
