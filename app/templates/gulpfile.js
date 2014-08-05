@@ -18,6 +18,8 @@ var gulpLoadPlugins = require('gulp-load-plugins'),
 var files = {
     "jsconf":   'src/js/allJS.conf',
     "jslib":    "all.min.js",
+    "jsieconf": 'src/js/lteie8.conf',
+    "jsielib":  "lteie8.min.js",
 }
 
 /*
@@ -107,15 +109,42 @@ gulp.task('jekyll',function()
 */
 gulp.task('libScripts',function()
 {
+    createJSLib(files.jsconf,files.jslib);
+    createJSLib(files.jsieconf,files.jsielib);
+});
+
+function createJSLib(conf,lib)
+{
+    var src = refreshJSLibs(conf);
+    if (src.length)
+    {
+        plugins.util.log(src);   
+        return gulp.src(src,{base:'bower_components/'})
+            .pipe(plugins.uglify())  
+            .pipe(plugins.header("/*! bower_components/${file.relative} */\n",{foo:'bar'}))
+            .pipe(plugins.concat(lib))
+            .pipe(gulp.dest(dest.js))
+            .pipe(plugins.browserSync.reload({stream:true}));
+    } else {
+        plugins.util.log('file empty ignoring');
+    }
+}
+
+/*
+    Check lib size
+*/        
+gulp.task('checkScripts',function()
+{
     var src = refreshJSLibs();
     if (src.length)
     {
         return gulp.src(src,{base:'bower_components/'})
             .pipe(plugins.uglify())  
             .pipe(plugins.header("/*! bower_components/${file.relative} */\n",{foo:'bar'}))
-            .pipe(plugins.concat(files.jslib))
-            .pipe(gulp.dest(dest.js))
-            .pipe(plugins.browserSync.reload({stream:true}));
+            .pipe(plugins.gzip())
+            .pipe(plugins.flatten())
+            .pipe(plugins.filesize())
+            .pipe(gulp.dest('.tmp'));
     } else {
         plugins.util.log('file empty ignoring');
     }
@@ -140,8 +169,14 @@ gulp.task('scripts',function()
 gulp.task('svg',function()
 {
     return gulp.src(glob.svg)
-        .pipe(plugins.svgmin())
-        .pipe(gulp.dest(dest.img));
+        .pipe(plugins.changed(dest.img))
+        .pipe(plugins.svgmin([
+                {removeHiddenElems:false},
+                {mergePaths:false},
+                {convertPathData:false},
+            ]))
+        .pipe(gulp.dest(dest.img))
+        .pipe(plugins.browserSync.reload({stream:true}));
 });
 
 /*
@@ -150,8 +185,10 @@ gulp.task('svg',function()
 gulp.task('bitmaps',function()
 {
     return gulp.src(glob.img)
+        .pipe(plugins.changed(dest.img))
         .pipe(plugins.imagemin())
-        .pipe(gulp.dest(dest.img));
+        .pipe(gulp.dest(dest.img))
+        .pipe(plugins.browserSync.reload({stream:true}));
 });
 
 /*
@@ -160,9 +197,9 @@ gulp.task('bitmaps',function()
 */
 gulp.task('browser-sync', function() {
     plugins.browserSync.init(null, {
-      server: {
-        baseDir: "./build/"
-      }
+        open:false,
+        // server: {baseDir: "./build/"},
+        proxy: "websitename.tom"
     });
 });
 
@@ -173,7 +210,7 @@ gulp.task('browser-sync', function() {
 gulp.task('sync',function()
 {
     return gulp.src(glob.html)
-        .pipe(plugins.changed(glob.html))
+        .pipe(plugins.cached('htmlsync'))
         .pipe(plugins.browserSync.reload({stream:true}));
 });
 
@@ -189,7 +226,8 @@ gulp.task('watch', function()
         gulp.watch(glob.js, ['scripts']);
 
         // Watch JS library conf
-        gulp.watch(files.jsconf, ['libScripts']);
+        gulp.watch(files.jsconf, ['libScripts']); // and "checkScripts" ???
+        gulp.watch(files.jsieconf, ['libScripts']); 
 
         // Watch bitmaps
         gulp.watch(glob.img, ['bitmaps']);
@@ -207,11 +245,11 @@ gulp.task('watch', function()
 /*
     ----- DEFAULT -----
 */
-gulp.task('default', ['browser-sync'], function(){gulp.run('watch');});
+gulp.task('default', ['browser-sync','watch']);
 
-function refreshJSLibs()
+function refreshJSLibs(confFile)
 {
-    var file = fs.readFileSync(files.jsconf,'utf8').trim().split('\n');    
+    var file = fs.readFileSync(confFile,'utf8').trim().split('\n');    
     var src = file.filter(function(v)
     {
         if (!v) return false;
@@ -224,7 +262,6 @@ function refreshJSLibs()
         }
               
         return true;
-    })
-    if (src.length) plugins.util.log(src);   
+    })    
     return src;
 }

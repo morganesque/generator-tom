@@ -62,6 +62,7 @@ TomGenerator.prototype.app = function app()
     this.mkdir('bower_components');
     this.mkdir('src/js');
     this.copy('empty', 'src/js/allJS.conf');
+    this.copy('empty', 'src/js/lteie8.conf');
     this.copy('js/log.js', 'bower_components/log.js');
 
     this.mkdir('src/img');
