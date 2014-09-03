@@ -61,7 +61,7 @@ TomGenerator.prototype.app = function app()
 
     this.mkdir('bower_components');
     this.mkdir('src/js');
-    this.copy('empty', 'src/js/allJS.conf');
+    this.copy('allJS.conf', 'src/js/allJS.conf');
     this.copy('empty', 'src/js/lteie8.conf');
     this.copy('js/log.js', 'bower_components/log.js');
 
@@ -78,6 +78,8 @@ TomGenerator.prototype.app = function app()
     this.copy('_bower.json', 'bower.json');
     this.copy('gitignore', '.gitignore');
     this.copy('bowerrc', '.bowerrc');
+
+    this.copy('index.html', 'build/index.html');
 
     if (this.gulpOrGrunt == 'grunt')
     {

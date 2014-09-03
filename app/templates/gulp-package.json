@@ -26,12 +26,6 @@
     "node-notifier": "*",
     "stream-combiner": "*",
     "browser-sync": "~0.9.1",
-    "gulp-cached": "0.0.3",
-    // "gulp-flatten": "0.0.2",
-    // "gulp-gzip": "0.0.8",
-    // "gulp-filesize": "0.0.6",
-    // "gulp-rename": "~1.2.0",
-    // "ncp": "~0.5.1",
-    // "glob": "~4.0.3"
+    "gulp-cached": "0.0.3"
   }
 }
