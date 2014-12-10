@@ -32,6 +32,7 @@ var glob = {
     "svg":      'src/img/**/*.svg',
     "jekyll":   ['build/**/*.{html,yml,md,mkd,markdown}','build/_config.yml'],
     "html":     'build/**/*.{html,yml,md,mkd,markdown,php}',
+    "css":      'build/css/*.css',
 };
 
 /*
@@ -53,10 +54,15 @@ gulp.task('sass',function()
     */        
     var combined = plugins.streamCombiner(
         gulp.src(glob.sass),
-        plugins.rubySass({style:'nested', loadPath:'bower_components', quiet:true,}),
-        plugins.autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'),
-        gulp.dest(dest.css),
-        plugins.browserSync.reload({stream:true})        
+        plugins.rubySass({
+            style:'nested', // Can be nested, compact, compressed, expanded 
+            loadPath:'bower_components', 
+            quiet:true,
+            sourcemap: "auto", 
+            sourcemapPath: 'sass'
+        }),
+        plugins.autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'),        
+        gulp.dest(dest.css)        
     );
     /*
         growl out any errors
@@ -71,6 +77,18 @@ gulp.task('sass',function()
         this.emit('end');
     }); 
     return combined;       
+});
+
+/*
+    Just adding that last sourcmap line back in (because autoprefixer removes it).
+*/        
+gulp.task('sourcemap',function()
+{
+    plugins.util.log('doing sourcemaps');   
+    return gulp.src(glob.css)
+        .pipe(plugins.footer('\n/*# sourceMappingURL=styles.css.map */\n'))
+        .pipe(plugins.browserSync.reload({stream:true}))
+        .pipe(gulp.dest(dest.css))
 });
 
 /*
@@ -174,6 +192,7 @@ gulp.task('svg',function()
                 {removeHiddenElems:false},
                 {mergePaths:false},
                 {convertPathData:false},
+                // {cleanupIDs:false},
             ]))
         .pipe(gulp.dest(dest.img))
         .pipe(plugins.browserSync.reload({stream:true}));
@@ -221,6 +240,7 @@ gulp.task('watch', function()
 { 
         // Watch .scss files
         gulp.watch(glob.sass, ['sass']);     
+        gulp.watch(glob.css, ['sourcemap']);     
 
         // Watch .js files
         gulp.watch(glob.js, ['scripts']);
