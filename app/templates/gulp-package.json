@@ -25,7 +25,8 @@
     "gulp-changed": "*",
     "node-notifier": "*",
     "stream-combiner": "*",
-    "browser-sync": "~0.9.1",
-    "gulp-cached": "0.0.3"
+    "browser-sync": "*",
+    "gulp-cached": "*",
+    "gulp-footer": "*"
   }
 }
