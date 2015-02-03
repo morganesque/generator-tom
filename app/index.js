@@ -39,12 +39,18 @@ TomGenerator.prototype.askFor = function askFor()
         name: "gulpOrGrunt",
         message: "To gulp or to grunt? That is the question",
         choices: ['gulp','grunt']
+    },{
+        type: 'list',
+        name: "jekyllYesNo",
+        message: "Would this be Jekyll your honour?",
+        choices: ['yes','no']
     }];
 
     this.prompt(prompts, function(props)
     {
         this.siteName = props.siteName;
         this.gulpOrGrunt = props.gulpOrGrunt;
+        this.jekyllYesNo = props.jekyllYesNo;
         cb();
     }.bind(this));
 };
@@ -53,28 +59,47 @@ TomGenerator.prototype.app = function app()
 {
     this.mkdir('src');
     this.mkdir('src/sass');
+    this.mkdir('src/js');
+    this.mkdir('src/img');
+    this.mkdir('src/jekyll');
+    
+    // sass
     this.copy('sass/styles.scss', 'src/sass/styles.scss');
     // this.copy('sass/ielte8.scss', 'src/sass/ielte8.scss');
     this.copy('sass/_mixins.scss', 'src/sass/_mixins.scss');
     this.copy('sass/_isuck.scss', 'src/sass/_isuck.scss');
     this.copy('sass/config.rb', 'src/sass/config.rb');
 
+    // js
     this.mkdir('bower_components');
-    this.mkdir('src/js');
-    this.copy('allJS.conf', 'src/js/allJS.conf');
+    this.copy('js/allJS.conf', 'src/js/allJS.conf');
     this.copy('empty', 'src/js/lteie8.conf');
     this.copy('js/log.js', 'bower_components/log.js');
 
-    this.mkdir('src/img');
+    if (this.jekyllYesNo == 'yes')
+    {
+        // jekyll
+        this.mkdir('src/jekyll/_includes');
+        this.mkdir('src/jekyll/_data');
+        this.mkdir('src/jekyll/_posts');
+        this.mkdir('src/jekyll/_layouts');
+        this.copy('jekyll/_layout.html', 'src/jekyll/_layouts/default.html');
+        this.copy('jekyll/top.html', 'src/jekyll/_includes/top.html');
+        this.copy('jekyll/bottom.html', 'src/jekyll/_includes/bottom.html');
+        this.copy('jekyll/_config.yml', '_config.yml');        
+    }
 
+    // build
     this.mkdir('build');
     this.mkdir('build/img');
     this.mkdir('build/js');
     this.mkdir('build/css');
 
+    // project admin 
     this.copy('project.sublime-project', this.siteName + '.sublime-project');    
     this.template('project.sh', 'project.sh'        );    
 
+    // configs
     this.copy('_bower.json', 'bower.json');
     this.copy('gitignore', '.gitignore');
     this.copy('bowerrc', '.bowerrc');
@@ -111,8 +136,8 @@ TomGenerator.prototype.app = function app()
 
     if (this.gulpOrGrunt == 'gulp')
     {
-        this.copy('gulp-package.json', 'package.json');
-        this.copy('gulpfile.js', 'gulpfile.js');
+        this.copy('gulp/package.json', 'package.json');
+        this.copy('gulp/gulpfile.js', 'gulpfile.js');
     }
 
     this.copy('Gemfile', 'Gemfile');
