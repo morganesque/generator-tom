@@ -20,7 +20,7 @@ var files = {
     "jsielib":  "lteie8.min.js",
 }
 
-var build = 'build/flats';
+var build = 'build';
 
 /*
     keep all the globs together here.
@@ -54,42 +54,17 @@ var dest = {
 */        
 gulp.task('sass',function()
 {
-    var cssFilter = $.filter('*.css');
-    /*
-        combine everything together so I can catch errors.
-    */        
-    var combined = $.streamCombiner(
-        gulp.src(glob.sass),
-        $.rubySass({
+    return $.rubySass(files.sass, {
             style:'compressed', // Can be nested, compact, compressed, expanded 
             loadPath:'bower_components', 
             quiet:true,
-            sourcemap: "auto", 
-            sourcemapPath: 'sass'
-        }),
-        cssFilter,
-        $.autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'),
-        $.footer('/*# sourceMappingURL=styles.css.map */\n'),
-        cssFilter.restore(),
-        $.browserSync.reload({stream:true}),
-        gulp.dest(dest.css) // this makes sure the sourcemap gets to the live CSS fodler.
-    );
-
-    /*
-        growl out any errors
-    */        
-    combined.on('error', function(err) 
-    {
-        $.util.log(err);   
-        $.nodeNotifier.Growl().notify({
-            name:       "SASS processor",
-            title:      "SASS",
-            message:    err.message,
-        });
-        this.emit('end');
-    }); 
-
-    return combined;       
+            sourcemap:true, 
+        })
+        .on('error', function (err) {console.error('Error!', err.message);})
+        .pipe($.autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
+        .pipe($.sourcemaps.write('.'))
+        .pipe(gulp.dest(dest.css))
+        .pipe($.browserSync.reload({stream:true}));
 });
 
 /*
