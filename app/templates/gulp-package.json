@@ -27,6 +27,9 @@
     "stream-combiner": "*",
     "browser-sync": "*",
     "gulp-cached": "*",
-    "gulp-footer": "*"
+    "gulp-footer": "*",
+    "gulp-shell": "*",
+    "gulp-filter": "*",
+    "gulp-sourcemaps": "*"
   }
 }
