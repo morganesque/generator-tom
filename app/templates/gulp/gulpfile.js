@@ -161,10 +161,10 @@ gulp.task('sync',function()
     (includes a server for flat builds)
 */
 gulp.task('browser-sync', function() {
-    $.browserSync.init(null, {
-        open:false,
-        // server: {baseDir: "./build/"},
-        proxy: "website.tom"
+    $.browserSync({
+        open:true,
+        server: {baseDir: "./build/"},
+        // proxy: "website.tom"
     });
 });
 
