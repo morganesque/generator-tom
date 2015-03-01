@@ -18,6 +18,7 @@ var files = {
     "jslib":    "all.min.js",
     "jsieconf": 'src/js/lteie8.conf',
     "jsielib":  "lteie8.min.js",
+    "sass":     'src/sass/styles.scss',
 }
 
 var build = 'build';
@@ -62,7 +63,7 @@ gulp.task('sass',function()
         })
         .on('error', function (err) {console.error('Error!', err.message);})
         .pipe($.autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
-        .pipe($.sourcemaps.write('.'))
+        .pipe($.sourcemaps.write())
         .pipe(gulp.dest(dest.css))
         .pipe($.browserSync.reload({stream:true}));
 });
@@ -162,7 +163,7 @@ gulp.task('sync',function()
 */
 gulp.task('browser-sync', function() {
     $.browserSync({
-        open:true,
+        open:false,
         server: {baseDir: "./build/"},
         // proxy: "website.tom"
     });
